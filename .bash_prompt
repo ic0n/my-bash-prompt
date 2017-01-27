@@ -49,6 +49,7 @@ if tput setaf 1 &> /dev/null; then
         color_bg_green_1="$(tput setab 2)" # GREEN BACKGROUND
         color_bg_red_0="$(tput setab 1)" # GREEN BACKGROUND
         color_bg_red_1="$(tput setab 1)" # GREEN BACKGROUND
+        color_bg_grey="$(tput setab 0)" # GREY BACKGROUND
         color_std_grey="$(tput setaf 7)" # NORMAL GREY
         color_std_yellow="$(tput setaf 7)" # NORMAL ORANGE
     fi
@@ -65,6 +66,7 @@ else
     color_bg_green_1="\033[1;32m" # GREEN BACKGROUND
     color_bg_red_0="\033[1;31m" # GREEN BACKGROUND
     color_bg_red_1="\033[1;31m" # GREEN BACKGROUND
+    color_bg_grey="\033[1;30m" # GREY BACKGROUND
     color_std_grey="\033[1;37m" # NORMAL GREY
     color_std_yellow="\033[1;37m" # NORMAL ORANGE
 
@@ -94,9 +96,11 @@ function prompt_update () {
     else
         stopped_jobs_count="$(jobs -sp | wc -l)"
         if [ "$stopped_jobs_count" -eq 0 ]; then
-            jobs_indi="⬢ \[$reset\]\[$color_bold_white\]${all_jobs_count##* }"
+            jobs_indi="▶ \[$reset\]\[$color_bold_white\]${all_jobs_count##* }"
+        elif [ "$stopped_jobs_count" -eq "$all_jobs_count" ]; then
+            jobs_indi="▨ \[$reset\]\[$color_bold_white\]${all_jobs_count##* }"
         else
-            jobs_indi="\[$blink\]⬢ \[$reset\]\[$color_bold_white\]${all_jobs_count##* }"
+            jobs_indi="⬢ \[$reset\]\[$color_bold_white\]${all_jobs_count##* }"
         fi
     fi
 
