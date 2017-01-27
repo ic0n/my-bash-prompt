@@ -1,0 +1,122 @@
+#!/usr/bin/env bash
+
+# A simple bash prompt by ic0n
+#
+# Copyright (c) 2017 Lynn Jackson
+# Released under the MIT license.
+#
+
+
+if tput setaf 1 &> /dev/null; then
+    # Reset the shell from our `if` check
+    tput sgr0 &> /dev/null
+
+    # Save common color actions
+    bold="$(tput bold)"
+    reset="$(tput sgr0)"
+
+    # Check if term support blink
+    if tput blink &> /dev/null; then
+        blink="$(tput blink)"
+    else
+        blink=""
+    fi
+
+    # If the terminal supports at least 256 colors, write out our 256 color based set
+    if [[ "$(tput colors)" -ge 256 ]] &> /dev/null; then
+        color_bold_blue="$bold$(tput setaf 27)" # BOLD BLUE
+        color_bold_white="$bold$(tput setaf 7)" # BOLD WHITE
+        color_bold_cyan="$bold$(tput setaf 39)" # BOLD CYAN
+        color_bold_green="$bold$(tput setaf 76)" # BOLD GREEN
+        color_bold_yellow="$bold$(tput setaf 154)" # BOLD YELLOW
+        color_bold_red="$bold$(tput setaf 197)" # BOLD RED
+        color_bg_green_0="$(tput setab 154)" # GREEN BACKGROUND
+        color_bg_green_1="$(tput setab 156)" # GREEN BACKGROUND
+        color_bg_red_0="$(tput setab 203)" # GREEN BACKGROUND
+        color_bg_red_1="$(tput setab 204)" # GREEN BACKGROUND
+        color_std_grey="$(tput setaf 240)" # NORMAL GREY
+        color_std_yellow="$(tput setaf 229)" # NORMAL ORANGE
+    else
+        # Otherwise, use colors from our set of 8
+        color_bold_blue="$bold$(tput setaf 4)" # BOLD BLUE
+        color_bold_white="$bold$(tput setaf 7)" # BOLD WHITE
+        color_bold_cyan="$bold$(tput setaf 6)" # BOLD CYAN
+        color_bold_green="$bold$(tput setaf 2)" # BOLD GREEN
+        color_bold_yellow="$bold$(tput setaf 3)" # BOLD YELLOW
+        color_bold_red="$bold$(tput setaf 1)" # BOLD RED
+        color_bg_green_0="$(tput setab 2)" # GREEN BACKGROUND
+        color_bg_green_1="$(tput setab 2)" # GREEN BACKGROUND
+        color_bg_red_0="$(tput setab 1)" # GREEN BACKGROUND
+        color_bg_red_1="$(tput setab 1)" # GREEN BACKGROUND
+        color_std_grey="$(tput setaf 7)" # NORMAL GREY
+        color_std_yellow="$(tput setaf 7)" # NORMAL ORANGE
+    fi
+
+else
+    reset="\033[m"
+    color_bold_blue="\033[1;34m" # BLUE
+    color_bold_white="\033[1;37m" # WHITE
+    color_bold_cyan="\033[1;36m" # CYAN
+    color_bold_green="\033[1;32m" # GREEN
+    color_bold_yellow="\033[1;33m" # YELLOW
+    color_bold_red="\033[1;31m" # RED
+    color_bg_green_0="\033[1;32m" # GREEN BACKGROUND
+    color_bg_green_1="\033[1;32m" # GREEN BACKGROUND
+    color_bg_red_0="\033[1;31m" # GREEN BACKGROUND
+    color_bg_red_1="\033[1;31m" # GREEN BACKGROUND
+    color_std_grey="\033[1;37m" # NORMAL GREY
+    color_std_yellow="\033[1;37m" # NORMAL ORANGE
+
+fi
+
+# Define the default prompt terminator character '$'
+if [[ "$UID" == 0  ]]; then
+    prompt_symbol="#"
+else
+    prompt_symbol="\$"
+fi
+
+
+function prompt_update () {
+    # Check if the last command is correct
+    if [ $? -eq 0  ]; then
+        checker="\[$color_bg_green_0\] \[$color_bg_green_1\] "
+    else
+        checker="\[$color_bg_red_0\] \[$color_bg_red_1\] "
+    fi
+
+    all_jobs_count="$(jobs -p | wc -l)"
+
+    # Check if there're some jobs
+    if [ "$all_jobs_count" -eq 0 ]; then
+        jobs_indi="⬡ "
+    else
+        stopped_jobs_count="$(jobs -sp | wc -l)"
+        if [ "$stopped_jobs_count" -eq 0 ]; then
+            jobs_indi="⬢ \[$reset\]\[$color_bold_white\]${all_jobs_count##* }"
+        else
+            jobs_indi="\[$blink\]⬢ \[$reset\]\[$color_bold_white\]${all_jobs_count##* }"
+        fi
+    fi
+
+
+    export PS1="\
+$checker\
+\[$reset\]\
+\[$color_std_grey\][\
+\[$color_bold_red\]\u\
+\[$color_bold_white\]@\
+\[$color_bold_blue\]\h\
+\[$color_bold_white\] in: \
+\[$color_bold_yellow\]\w\
+\[$color_std_yellow\] $jobs_indi\
+\[$reset\]\
+\[$color_std_grey\]]\
+\n\
+\[$color_std_grey\]└──\
+\[$color_bold_white\]$prompt_symbol\
+\[$reset\] "
+}
+
+
+PROMPT_COMMAND=prompt_update
