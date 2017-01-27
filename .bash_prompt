@@ -24,7 +24,7 @@ if tput setaf 1 &> /dev/null; then
 
     # If the terminal supports at least 256 colors, write out our 256 color based set
     if [[ "$(tput colors)" -ge 256 ]] &> /dev/null; then
-        color_bold_blue="$bold$(tput setaf 27)" # BOLD BLUE
+        color_bold_blue="$bold$(tput setaf 69)" # BOLD BLUE
         color_bold_white="$bold$(tput setaf 7)" # BOLD WHITE
         color_bold_cyan="$bold$(tput setaf 39)" # BOLD CYAN
         color_bold_green="$bold$(tput setaf 76)" # BOLD GREEN
@@ -34,7 +34,8 @@ if tput setaf 1 &> /dev/null; then
         color_bg_green_1="$(tput setab 156)" # GREEN BACKGROUND
         color_bg_red_0="$(tput setab 203)" # GREEN BACKGROUND
         color_bg_red_1="$(tput setab 204)" # GREEN BACKGROUND
-        color_std_grey="$(tput setaf 240)" # NORMAL GREY
+        color_bg_grey="$(tput setab 235)" # GREY BACKGROUND
+        color_std_grey="$(tput setaf 245)" # NORMAL GREY
         color_std_yellow="$(tput setaf 229)" # NORMAL ORANGE
     else
         # Otherwise, use colors from our set of 8
@@ -102,7 +103,7 @@ function prompt_update () {
 
     export PS1="\
 $checker\
-\[$reset\]\
+\[$reset\]\[$color_bg_grey\]\
 \[$color_std_grey\][\
 \[$color_bold_red\]\u\
 \[$color_bold_white\]@\
@@ -110,9 +111,9 @@ $checker\
 \[$color_bold_white\] in: \
 \[$color_bold_yellow\]\w\
 \[$color_std_yellow\] $jobs_indi\
-\[$reset\]\
+\[$reset\]\[$color_bg_grey\]\
 \[$color_std_grey\]]\
-\n\
+\[$reset\]\n\
 \[$color_std_grey\]└──\
 \[$color_bold_white\]$prompt_symbol\
 \[$reset\] "
