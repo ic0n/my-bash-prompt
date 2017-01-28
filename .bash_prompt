@@ -30,8 +30,8 @@ if tput setaf 1 &> /dev/null; then
         color_bold_green="$bold$(tput setaf 76)" # BOLD GREEN
         color_bold_yellow="$bold$(tput setaf 154)" # BOLD YELLOW
         color_bold_red="$bold$(tput setaf 197)" # BOLD RED
-        color_bg_green_0="$(tput setab 154)" # GREEN BACKGROUND
-        color_bg_green_1="$(tput setab 156)" # GREEN BACKGROUND
+        color_bg_green_0="$(tput setab 148)" # GREEN BACKGROUND
+        color_bg_green_1="$(tput setab 150)" # GREEN BACKGROUND
         color_bg_red_0="$(tput setab 203)" # GREEN BACKGROUND
         color_bg_red_1="$(tput setab 204)" # GREEN BACKGROUND
         color_bg_grey="$(tput setab 235)" # GREY BACKGROUND
@@ -83,16 +83,16 @@ fi
 function prompt_update () {
     # Check if the last command is correct
     if [ $? -eq 0  ]; then
-        checker="\[$color_bg_green_0\] \[$color_bg_green_1\] "
+        checker="\[$color_bg_green_0\] \[$color_bg_green_1\]"
     else
-        checker="\[$color_bg_red_0\] \[$color_bg_red_1\] "
+        checker="\[$color_bg_red_0\] \[$color_bg_red_1\]"
     fi
 
     all_jobs_count="$(jobs -p | wc -l)"
 
     # Check if there're some jobs
     if [ "$all_jobs_count" -eq 0 ]; then
-        jobs_indi="⬡ "
+        jobs_indi="⬡   "
     else
         stopped_jobs_count="$(jobs -sp | wc -l)"
         if [ "$stopped_jobs_count" -eq 0 ]; then
@@ -107,16 +107,14 @@ function prompt_update () {
 
     export PS1="\
 $checker\
+\[$color_std_yellow\]$jobs_indi\
 \[$reset\]\[$color_bg_grey\]\
-\[$color_std_grey\][\
 \[$color_bold_red\]\u\
 \[$color_bold_white\]@\
 \[$color_bold_blue\]\h\
 \[$color_bold_white\] in: \
 \[$color_bold_yellow\]\w\
-\[$color_std_yellow\] $jobs_indi\
-\[$reset\]\[$color_bg_grey\]\
-\[$color_std_grey\]]\
+\[$reset\]\[$color_bg_grey\] \
 \[$reset\]\n\
 \[$color_std_grey\]└──\
 \[$color_bold_white\]$prompt_symbol\
