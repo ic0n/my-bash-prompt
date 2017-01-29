@@ -113,11 +113,11 @@ function prompt_update () {
     else
         stopped_jobs_count="$(jobs -sp | wc -l)"
         if [ "$stopped_jobs_count" -eq 0 ]; then
-            jobs_indi=$(printf " \[$color_base_0\]▶ \[$color_bold_white\]%02d " $all_jobs_count)
+            jobs_indi=$(printf "\[$color_base_0\]▶ \[$color_bold_white\]%d " $all_jobs_count)
         elif [ "$stopped_jobs_count" -eq "$all_jobs_count" ]; then
-            jobs_indi=$(printf " \[$color_base_0\]▨ \[$color_bold_white\]%02d " $all_jobs_count)
+            jobs_indi=$(printf "\[$color_base_0\]▨ \[$color_bold_white\]%d " $all_jobs_count)
         else
-            jobs_indi=$(printf " \[$color_base_0\]⬢ \[$color_bold_white\]%02d " $all_jobs_count)
+            jobs_indi=$(printf "\[$color_base_0\]⬢ \[$color_bold_white\]%d " $all_jobs_count)
         fi
     fi
 
