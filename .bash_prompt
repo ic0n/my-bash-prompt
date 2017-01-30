@@ -83,13 +83,15 @@ function dir_trim() {
     # Only show ellipses for directory trees -gt 3
     # Otherwise use the default pwd as the current \w replacement
     local pre= NAME="$1" LENGTH="$2"
-    [[ "$NAME" != "${NAME#$HOME/}" || -z "${NAME#$HOME}" ]] &&
-    pre='~' NAME="${NAME#$HOME}" LENGTH=$[LENGTH-1];
-    local path_length="$(echo $NAME | grep -o '/' | wc -l)"
+    IFS=/ read -ra __ <<< "$NAME"
+    if [ "/${__[1]}/${__[2]}" = "$HOME" ]; then
+        pre='~' NAME="${NAME#$HOME}" LENGTH=$[LENGTH-1];
+    else
+        pre="/${__[1]}"
+    fi
+    local path_length="$((${#__[@]}-1))"
     if [ "$path_length" -gt "$LENGTH" ]; then
-        local BASE="${NAME##*/}"
-        local DIR="${NAME%/*}"
-        NAME="/.../${DIR##*/}/$BASE"
+        NAME="/.../${__[-1]}/${__[-2]}"
     fi
     echo "$pre$NAME"
 }
