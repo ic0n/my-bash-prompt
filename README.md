@@ -37,6 +37,6 @@ Why?
 First of all, the default macOS/OSX bash prompt is hard to notice when there are lots of text.    
 Second of all, well, this's  so much fun!
 
-Last
+Note
 ------------------
 Sorry for my bad English, not came from a English speaking country.
