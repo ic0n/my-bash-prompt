@@ -33,10 +33,9 @@ Screen Shot
 ![screenshot](https://raw.githubusercontent.com/ic0n/my-bash-prompt/master/screen_shot/screenshot.png)
 
 Why?
-----
-There several reasons but in short:    
-First of all, the default macOS/OSX bash prompt is hard to notice when there are lots of text.    
-Second of all, well, because it's so much fun!
+----    
+First of all, the default macOS/OSX bash prompt is hard to notice when there are lots of text.    
+Second of all, well, this's  so much fun!
 
 Last
 ------------------
