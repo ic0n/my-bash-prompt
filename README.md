@@ -4,6 +4,7 @@ My beautiful bash prompt (WORK IN PROGRESS)
 Installation
 ------------
 There's lots of bugs and the code is dirty right now. Seriously DO NOT install it.    
+
 Requirements:
   - tput
   - bash 3+
