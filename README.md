@@ -21,7 +21,7 @@ And them, add this line in your .bashrc (For macOS/OSX it is .bash_profile)
 Features(WORK IN PROGRESS)
 --------
 - All written in bash script
-- Easy to distinguish with line is the command you type
+- Easy to distinguish which line is the command you type
 - Collapsable path
 - Indicate for the previously failed command
 - Indicate for http proxy
