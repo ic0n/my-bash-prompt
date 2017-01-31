@@ -84,14 +84,14 @@ function dir_trim() {
     # Otherwise use the default pwd as the current \w replacement
     local pre= NAME="$1" LENGTH="$2"
     IFS=/ read -ra __ <<< "$NAME"
-    if [ "/${__[1]}/${__[2]}" = "$HOME" ]; then
+    if [ "$NAME" != "${NAME#$HOME/}" ] || [ -z "${NAME#$HOME}" ]; then
         pre='~' NAME="${NAME#$HOME}" LENGTH=$[LENGTH-1];
     else
-        pre="/${__[1]}"
+        pre="/${__[1]}" NAME="${NAME#$pre}";
     fi
     local path_length="$((${#__[@]}-1))"
     if [ "$path_length" -gt "$LENGTH" ]; then
-        NAME="/.../${__[-1]}/${__[-2]}"
+        NAME="/.../${__[path_length-1]}/${__[path_length]}"
     fi
     echo "$pre$NAME"
 }
