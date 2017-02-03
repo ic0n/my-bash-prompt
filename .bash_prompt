@@ -80,25 +80,33 @@ else
 fi
 
 function dir_trim() {
-    # Only show ellipses for directory trees -gt 3
+    # Only show ellipses for directory trees greater than LENGTH
     # Otherwise use the default pwd as the current \w replacement
     local pre= NAME="$1" LENGTH="$2"
-    IFS=/ read -ra __ <<< "$NAME"
+    IFS=/ read -ra __ <<< "${NAME#/}"
+    local path_length="${#__[@]}"
+
     if [ "$NAME" != "${NAME#$HOME/}" ] || [ -z "${NAME#$HOME}" ]; then
-        pre='~' NAME="${NAME#$HOME}" LENGTH=$[LENGTH-1];
+        pre='~' NAME="${NAME#$HOME}" LENGTH="$(( $LENGTH + 1 ))";
     else
-        pre="/${__[1]}" NAME="${NAME#$pre}";
+        pre="/${__[0]}" NAME="${NAME#$pre}";
     fi
-    local path_length="$((${#__[@]}-1))"
+
     if [ "$path_length" -gt "$LENGTH" ]; then
-        NAME="/.../${__[path_length-1]}/${__[path_length]}"
+        NAME="/..."
+        for (( i="$(( $path_length - $LENGTH + 2 ))"; i<"$path_length" ; i++ ))
+        do
+            NAME+="/${__[$i]}"
+        done
     fi
+
     echo "$pre$NAME"
 }
 
 N_PROMPT_DIRTRIM=4
 
 function prompt_update () {
+    start=$(gdate +%s.%N)
     # Check if the last command is correct
     if [ $? -eq 0  ]; then
         checker=""
@@ -106,14 +114,13 @@ function prompt_update () {
         checker=""
     fi
 
-    all_jobs_count="$(jobs -p | wc -l)"
-    all_jobs_count="${all_jobs_count##* }"
+    all_jobs_count="$(IFS=$'\n'; set -f; set -- $(jobs -p); echo $#)"
 
     # Check if there're some jobs
     if [ "$all_jobs_count" -eq 0 ]; then
         jobs_indi="⬡ "
     else
-        stopped_jobs_count="$(jobs -sp | wc -l)"
+        stopped_jobs_count="$(IFS=$'\n'; set -f; set -- $(jobs -sp); echo $#)"
         if [ "$stopped_jobs_count" -eq 0 ]; then
             jobs_indi=$(printf "\[$color_base_0\]▶ \[$color_bold_white\]%d " $all_jobs_count)
         elif [ "$stopped_jobs_count" -eq "$all_jobs_count" ]; then
@@ -135,6 +142,9 @@ function prompt_update () {
 \[$color_bold_white\]$prompt_symbol\
  \[$reset\]"
 
+    end=$(gdate +%s.%N)
+    runtime=$(echo "$end - $start" | bc)
+    echo "time used:$runtime"
 }
 
 PROMPT_COMMAND=prompt_update
