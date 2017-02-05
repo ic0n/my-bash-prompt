@@ -14,6 +14,7 @@ if tput setaf 1 &> /dev/null; then
     # Save common color actions
     bold="$(tput bold)"
     reset="$(tput sgr0)"
+    dim="$(tput dim)"
 
     # Check if term support blink
     if tput blink &> /dev/null; then
@@ -24,7 +25,6 @@ if tput setaf 1 &> /dev/null; then
 
     # If the terminal supports at least 256 colors, write out our 256 color based set
     if [[ "$(tput colors)" -ge 256 ]] &> /dev/null; then
-        color_bold_white="$bold$(tput setaf 7)" # BOLD WHITE
         color_std_yellow="$(tput setaf 229)" # NORMAL ORANGE
         color_base_0="$(tput setab 200)"
         color_betw_0="$(tput setab 128)"
@@ -37,6 +37,10 @@ if tput setaf 1 &> /dev/null; then
         color_base_5="$(tput setab 190)" # GREEN BACKGROUND
         color_betw_5="$(tput setab 201)"
         color_base_00="$(tput setaf 17)"
+        color_base_01="$bold$(tput setaf 7)" # BOLD WHITE
+        color_error_0="$(tput setab 90)"
+        color_error_1="$(tput setab 9)"
+        color_error_00="$(tput setaf 160)"
     else
         # Otherwise, use colors from our set of 8
         color_bold_blue="$bold$(tput setaf 4)" # BOLD BLUE
@@ -106,12 +110,16 @@ function dir_trim() {
 N_PROMPT_DIRTRIM=4
 
 function prompt_update () {
-    start=$(gdate +%s.%N)
     # Check if the last command is correct
-    if [ $? -eq 0  ]; then
-        checker=""
+    local err_code="$?"
+
+    start=$(gdate +%s.%N)
+
+    if [ "$err_code" -eq 0  ]; then
+        checker="$color_base_4$color_base_01"
     else
-        checker=""
+        #checker="\[$color_error_1\] \[$color_error_0\]\[$color_error_00\]$err_code"
+        checker="$color_error_0$color_error_00"
     fi
 
     all_jobs_count="$(IFS=$'\n'; set -f; set -- $(jobs -p); echo $#)"
@@ -132,14 +140,13 @@ function prompt_update () {
 
 
     export PS1="\
-\[$color_base_5\] \
 \[$color_std_yellow\]\[$color_betw_5\]$jobs_indi\
 \[$reset\]\[$color_bg_grey\]\
 \[$color_base_00\]\[$color_betw_0\] \[$color_base_1\]\
 \[$color_base_00\]\[$color_betw_1\] \[$color_base_2\]\
 \[$color_base_00\]\[$color_betw_2\] \[$color_base_3\]$(dir_trim "$PWD" $N_PROMPT_DIRTRIM) \
-\[$reset\]\[$color_base_4\] \
-\[$color_bold_white\]$prompt_symbol\
+\[$reset\]\[$checker\] \
+$prompt_symbol\
  \[$reset\]"
 
     end=$(gdate +%s.%N)
