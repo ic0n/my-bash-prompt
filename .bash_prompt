@@ -27,8 +27,8 @@ if tput setaf 1 &> /dev/null; then
     if [[ "$(tput colors)" -ge 256 ]] &> /dev/null; then
         color_std_yellow="$(tput setaf 229)" # NORMAL ORANGE
         color_base_0="$(tput setab 200)"
-        color_betw_0="$(tput setab 128)"
-        color_base_1="$(tput setab 134)"
+        color_betw_0="$(tput setab 133)"
+        color_base_1="$(tput setab 135)"
         color_betw_1="$(tput setab 97)"
         color_base_2="$(tput setab 98)"
         color_betw_2="$(tput setab 61)"
@@ -37,7 +37,8 @@ if tput setaf 1 &> /dev/null; then
         color_base_5="$(tput setab 190)" # GREEN BACKGROUND
         color_betw_5="$(tput setab 201)"
         color_base_00="$(tput setaf 17)"
-        color_base_01="$bold$(tput setaf 7)" # BOLD WHITE
+        color_base_01="$(tput setaf 7)" # BOLD WHITE
+        color_base_02="$(tput setaf 229)"
         color_error_0="$(tput setab 90)"
         color_error_1="$(tput setab 161)"
         color_error_00="$(tput setaf 160)"
@@ -114,9 +115,10 @@ function prompt_update () {
     local err_code="$?"
 
     start=$(gdate +%s.%N)
+    #local SSH_CLIENT=" "
 
     if [ "$err_code" -eq 0  ]; then
-        local checker="$color_base_4$color_base_01"
+        local checker="$color_base_4$bold$color_base_01"
     else
         #checker="\[$color_error_1\] \[$color_error_0\]\[$color_error_00\]$err_code"
         local checker="$color_error_0$color_error_00"
@@ -130,20 +132,20 @@ function prompt_update () {
     else
         local stopped_jobs_count="$(IFS=$'\n'; set -f; set -- $(jobs -sp); echo $#)"
         if [ "$stopped_jobs_count" -eq 0 ]; then
-            local jobs_indi=$(printf "\[$color_base_0\]▶ \[$color_bold_white\]%d " $all_jobs_count)
+            local jobs_indi=$(printf "▶ %d " $all_jobs_count)
         elif [ "$stopped_jobs_count" -eq "$all_jobs_count" ]; then
-            local jobs_indi=$(printf "\[$color_base_0\]▨ \[$color_bold_white\]%d " $all_jobs_count)
+            local jobs_indi=$(printf "▨ %d " $all_jobs_count)
         else
-            local jobs_indi=$(printf "\[$color_base_0\]⬢ \[$color_bold_white\]%d " $all_jobs_count)
+            local jobs_indi=$(printf "⬢ %d " $all_jobs_count)
         fi
     fi
 
     if [[ -n "${SSH_CLIENT-}${SSH2_CLIENT-}${SSH_TTY-}" ]]; then
-        local ssh_host=" \h "
-        local ssh_user=" \u "
+        local ssh_host="\h "
+        local ssh_user="\u "
     else
-        local ssh_host=" "
-        local ssh_user=" "
+        local ssh_host=""
+        local ssh_user=""
     fi
 
     if [[ -n "${http_proxy-}${https_proxy-}" ]]; then
@@ -153,10 +155,10 @@ function prompt_update () {
     fi
 
     export PS1="\
-\[$color_std_yellow\]\[$color_betw_5\]${proxy_indi}${jobs_indi}\
+\[$color_base_00\]\[$color_base_5\]${proxy_indi}${jobs_indi}\
 \[$reset\]\[$color_bg_grey\]\
-\[$color_base_00\]\[$color_betw_0\]$ssh_host\[$color_base_1\]\
-\[$color_base_00\]\[$color_betw_1\]$ssh_user\[$color_base_2\]\
+\[$color_base_00\]\[$color_betw_5\] \[$color_base_0\]$ssh_host\
+\[$color_base_00\]\[$color_betw_0\] \[$color_base_1\]$ssh_user\
 \[$color_base_00\]\[$color_betw_2\] \[$color_base_3\]$(dir_trim "$PWD" $N_PROMPT_DIRTRIM) \
 \[$reset\]\[$checker\] \
 $prompt_symbol\
