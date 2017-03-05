@@ -126,7 +126,7 @@ function prompt_update () {
 
     # Check if there're some jobs
     if [ "$all_jobs_count" -eq 0 ]; then
-        local jobs_indi="⬡ "
+        local jobs_indi=""
     else
         local stopped_jobs_count="$(IFS=$'\n'; set -f; set -- $(jobs -sp); echo $#)"
         if [ "$stopped_jobs_count" -eq 0 ]; then
@@ -142,14 +142,18 @@ function prompt_update () {
         local ssh_host=" \h "
         local ssh_user=" \u "
     else
-        local ssh_host=""
-        local ssh_user=""
+        local ssh_host=" "
+        local ssh_user=" "
     fi
 
-
+    if [[ -n "${http_proxy-}${https_proxy-}" ]]; then
+        local proxy_indi="⇪ "
+    else
+        local proxy_indi="⇧ "
+    fi
 
     export PS1="\
-\[$color_std_yellow\]\[$color_betw_5\]$jobs_indi\
+\[$color_std_yellow\]\[$color_betw_5\]${proxy_indi}${jobs_indi}\
 \[$reset\]\[$color_bg_grey\]\
 \[$color_base_00\]\[$color_betw_0\]$ssh_host\[$color_base_1\]\
 \[$color_base_00\]\[$color_betw_1\]$ssh_user\[$color_base_2\]\
