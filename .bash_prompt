@@ -149,7 +149,6 @@ function prompt_update () {
 
 
     export PS1="\
-#\[$color_base_5\] \
 \[$color_std_yellow\]\[$color_betw_5\]$jobs_indi\
 \[$reset\]\[$color_bg_grey\]\
 \[$color_base_00\]\[$color_betw_0\]$ssh_host\[$color_base_1\]\
