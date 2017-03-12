@@ -88,20 +88,22 @@ function dir_trim() {
     # Only show ellipses for directory trees greater than LENGTH
     # Otherwise use the default pwd as the current \w replacement
     local pre= NAME="$1" LENGTH="$2"
+    IFS=/ read -ra __ <<< "${HOME#/}"
+    local home_length="${#__[@]}"
     IFS=/ read -ra __ <<< "${NAME#/}"
     local path_length="${#__[@]}"
 
     if [ "$NAME" != "${NAME#$HOME/}" ] || [ -z "${NAME#$HOME}" ]; then
-        local pre='~' NAME="${NAME#$HOME}" LENGTH="$(( $LENGTH + 1 ))";
+        pre='~' NAME="${NAME#$HOME}" LENGTH="$(( $LENGTH + $home_length - 1 ))";
     else
-        local pre="/${__[0]}" NAME="${NAME#$pre}";
+        pre="/${__[0]}" NAME="${NAME#$pre}";
     fi
 
     if [ "$path_length" -gt "$LENGTH" ]; then
-        local NAME="/..."
-        for (( i="$(( $path_length - $LENGTH + 2 ))"; i<"$path_length" ; i++ ))
+        NAME="/..."
+        for (( i="$(( $path_length - $LENGTH + $home_length ))"; i<"$path_length" ; i++ ))
         do
-            local NAME+="/${__[$i]}"
+            NAME+="/${__[$i]}"
         done
     fi
 
