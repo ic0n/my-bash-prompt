@@ -150,7 +150,7 @@ function prompt_update () {
         local ssh_user=""
     fi
 
-    if [[ -n "${http_proxy-}${https_proxy-}" ]]; then
+    if [[ -n "${HTTP_PROXY-}${HTTPS_PROXY-}${http_proxy-}${https_proxy-}" ]]; then
         local proxy_indi="⇪ "
     else
         local proxy_indi="⇧ "
