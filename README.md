@@ -11,12 +11,17 @@ Requirements:
   - `$TERM` must be set to `xterm-256color`
   
 To install, run the following from your terminal:
-```
-$ cd
+
+~~~ bash
 $ git clone https://github.com/ic0n/my-bash-prompt.git
-$ ln -s .bash_prompt ~/.bash_prompt
-```
-And them, add this line in your .bashrc (For macOS/OSX it is .bash_profile)
+$ ln -s /path/to/my-bash-prompt/.bash_prompt ~/.bash_prompt
+~~~
+
+And then, add this line into your .bashrc (For macOS/OSX it is .bash_profile)
+
+~~~ bash
+source $HOME/.bash_prompt
+~~~
 
 Features(WORK IN PROGRESS)
 --------
