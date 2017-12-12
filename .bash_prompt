@@ -116,7 +116,6 @@ function prompt_update () {
     # Check if the last command is correct
     local err_code="$?"
 
-    start=$(gdate +%s.%N)
     #local SSH_CLIENT=" "
 
     if [ "$err_code" -eq 0  ]; then
@@ -166,9 +165,7 @@ function prompt_update () {
 $prompt_symbol\
  \[$reset\]"
 
-    end=$(gdate +%s.%N)
-    runtime=$(echo "$end - $start" | bc)
-    echo "time used:$runtime"
+
 }
 
 PROMPT_COMMAND=prompt_update
